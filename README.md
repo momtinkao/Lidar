@@ -10,7 +10,8 @@
   - [1. 安裝基礎編譯工具](#1-安裝基礎編譯工具)
   - [2. 安裝PCL相依套件](#2-安裝PCL相依套件)
 - [⚙️ 編譯與安裝流程](#️-編譯與安裝流程)
-- [✅ 程式使用流程](#-程式使用流程)
+- [✅ 程式建立流程](#-程式建立流程)
+- [程式使用流程]
 
 ---
 
@@ -46,4 +47,29 @@ make -j2
 sudo make -j2 install
 ```
 
+### 程式建立流程
+1. 請先進入到multiple_function_for_iter資料夾中
+2. 創建build資料夾
+```bash
+mkdir build && cd build
+```
+3. Run the Cmake
+```bash
+cmake ..
+```
+4. 建立intergrated程式
+```bash
+make
+```
 ### 程式使用流程
+
+1. 請先將已經記錄好的pcd檔資料夾移動至build資料夾中
+2. 
+```bash
+./itergrated Folder_Name Frame_to_Started
+```
+3. **KeyBoard mapping**
+>[!NOTE]
+> n:next frame, m:next 20 frame, b:prev frame, v: prev 20 frame, a:auto play, p:pause
+
+

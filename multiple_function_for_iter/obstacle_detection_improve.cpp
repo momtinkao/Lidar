@@ -18,10 +18,12 @@
 #include <chrono>  // 用於計時
 #include <cmath>
 #include <deque>  // 用於快取管理
+#include <filesystem>
 #include <iomanip>
 #include <iostream>
 #include <map>     // 用於快取
 #include <memory>  // 用於 std::shared_ptr
+#include <regex>
 #include <string>
 #include <vector>
 
@@ -52,6 +54,7 @@ pcl::visualization::PCLVisualizer::Ptr viewer_cluster;
 
 std::string pcd_directory;
 std::string filename_prefix = "0-";  // 您的檔案前綴
+std::regex pcd_pattern(R"(^(.*)-\d+\.pcd$)");
 uint32_t total_frames = 0;
 size_t current_frame_idx = 0;
 
@@ -66,6 +69,19 @@ bool paused = false;
 bool show_ground = true;
 bool show_non_clustered = true;
 bool auto_play = false;  // 自動播放狀態
+
+bool getPrefix() {
+    for (auto& file : std::filesystem::directory_iterator(pcd_directory)) {
+        std::string filename_str = file.path().filename().string();
+        std::smatch matches;
+        if (std::regex_match(filename_str, matches, pcd_pattern)) {
+            if (matches.size() == 2) {
+                filename_prefix = matches[1].str();
+                break;
+            }
+        }
+    }
+}
 
 // 汽車分類函式
 bool classifyBoxAsCar(Box& box, int num_points_in_cluster) {
@@ -176,9 +192,10 @@ void addDistanceMarkers(pcl::visualization::PCLVisualizer::Ptr& vis) {
 }
 
 // 從磁碟載入並處理單一幀的完整流程
-std::shared_ptr<FrameData> loadAndProcessFrame_update(uint32_t frame_id) {
+std::shared_ptr<FrameData>
+loadAndProcessFrame_update(uint32_t frame_id) {
     // --- 1. 讀取檔案 ---
-    std::string pcd_file_path = pcd_directory + "/" + filename_prefix + std::to_string(frame_id) + ".pcd";
+    std::string pcd_file_path = pcd_directory + "/" + filename_prefix + "-" + std::to_string(frame_id) + ".pcd";
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr frame_cloud_raw(new pcl::PointCloud<pcl::PointXYZ>);
     pcl::PCDReader reader;
@@ -400,13 +417,15 @@ int main(int argc, char** argv) {
         return -1;
     }
     pcd_directory = argv[1];
+    getPrefix();
+    std::cout << "Prefix: " << filename_prefix << endl;
 
     // 預先掃描資料夾以計算總幀數
     std::cout << "正在掃描資料夾中的幀數..." << std::endl;
     pcl::PCDReader reader;
     while (true) {
         pcl::PCLPointCloud2 dummy;
-        std::string path_to_check = pcd_directory + "/" + filename_prefix + std::to_string(total_frames) + ".pcd";
+        std::string path_to_check = pcd_directory + "/" + filename_prefix + "-" + std::to_string(total_frames) + ".pcd";
         if (reader.readHeader(path_to_check, dummy) != 0) {
             break;
         }
