@@ -5,7 +5,7 @@
 
 
 ### 目錄
-
+- 如何得到pcd file
 - [🛠️ 環境準備與相依套件](#️-環境準備與相依套件)
   - [1. 安裝基礎編譯工具](#1-安裝基礎編譯工具)
   - [2. 安裝PCL相依套件](#2-安裝PCL相依套件)
@@ -14,6 +14,15 @@
 - 程式使用流程
 
 ---
+
+### 如何得到pcd file
+先下載[SDK File](https://drive.google.com/file/d/1X23JpTPGJxZN4qxR1geOkZZviqsQqCX3/view?usp=drive_link)，並進入inno-lidar-sdk-release-client-sdk-3.102.5-public.tgz\apps\tools\get_pcd資料夾
+執行以下指令並指定需要多少file，大約15個file為一秒
+```bash
+mkdir your_folder_name && cd your_folder_name
+.././get_pcd --lidar-ip 172.168.1.10 --lidar-port 8010 --lidar-udp-port 8010 --file-number your_file_nubre --output-filename your_filename_prefix.pcd
+```
+跑完後將資料夾保存好以進行後續點雲處理
 
 ### 環境準備與相依套件
 
