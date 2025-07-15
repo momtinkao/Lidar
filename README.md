@@ -71,6 +71,8 @@ make
 ```
 3. **KeyBoard mapping**
 >[!NOTE]
-> n:next frame, m:next 20 frame, b:prev frame, v: prev 20 frame, a:auto play, p:pause
+> **n**:next frame, **m**:next 20 frame    
+>**b**:prev frame, **v**: prev 20 frame    
+>**a**:auto play, **p**:pause
 
 
